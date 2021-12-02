@@ -29,7 +29,7 @@ spec:
               secretKeyRef:
                 name:  mssql-secret
                 key: db-connection-string
-
+              
               # configMapKeyRef: 
               #   name: mssql-config-map
               #   key: db-connection 

@@ -38,5 +38,16 @@ namespace ProductsService.Controllers
             var products = await _dataContext.Products.ToListAsync();
             return Ok(products);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProduct(int id)
+        {
+            var product = await _dataContext.Products.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (product == null)
+                return NotFound();
+
+            return Ok(product);
+        }
     }
 }

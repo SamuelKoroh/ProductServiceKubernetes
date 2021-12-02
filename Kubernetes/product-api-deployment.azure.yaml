@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: product-api
-        image:  samuelkoroh/product-api:v2.0
+        image:  samuelkoroh/product-api:v2.#{Build.BuildId}#
         resources:
           limits:
             memory: "128Mi"

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-deployment
+spec:
+  selector:
+    matchLabels:
+      app: product-api
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: product-api
+    spec:
+      containers:
+      - name: product-api
+        image:  samuelkoroh/product-api:v2.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        - containerPort: 3317
+        env:
+          - name: ConnectionStrings__Default
+            valueFrom:
+              secretKeyRef:
+                name:  mssql-secret
+                key: db-connection-string
+              
+              # configMapKeyRef: 
+              #   name: mssql-config-map
+              #   key: db-connection 
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  product-api-service
+spec:
+  selector:
+    app:  product-api
+  type: NodePort
+  ports:
+  - name:  default-1
+    port:  80
+    targetPort:  80
+  - name:  default-2
+    port:  3317
+    targetPort:  3317
+  - name:  default-3
+    port:  443
+    targetPort:  443

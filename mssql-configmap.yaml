@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mssql-config-map
+  labels:
+    app: product-api
+data:
+  db-connection: Server=mssql-service;database=ProductDB;user=sa;password=@Aa123456

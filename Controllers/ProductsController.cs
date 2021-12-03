@@ -19,7 +19,7 @@ namespace ProductsService.Controllers
             _dataContext = dataContext;
         }
         [HttpGet]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts([FromQuery] Filter filter)
         {
             _dataContext.Database.Migrate();
 
@@ -35,6 +35,7 @@ namespace ProductsService.Controllers
                 _dataContext.Products.AddRange(productsList);
                 await _dataContext.SaveChangesAsync();
             }
+            // if (!string.IsNullOrWhiteSpace(filter.Name))
             var products = await _dataContext.Products.ToListAsync();
             return Ok(products);
         }
@@ -62,6 +63,10 @@ namespace ProductsService.Controllers
              await _dataContext.SaveChangesAsync();
 
             return Ok(product);
+        }
+
+        public class Filter {
+            public string Name { get; set; }
         }
     }
 }

@@ -49,5 +49,19 @@ namespace ProductsService.Controllers
 
             return Ok(product);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _dataContext.Products.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (product == null)
+                return NotFound();
+
+             _dataContext.Products.Remove(product);
+             await _dataContext.SaveChangesAsync();
+
+            return Ok(product);
+        }
     }
 }

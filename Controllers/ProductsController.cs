@@ -35,7 +35,7 @@ namespace ProductsService.Controllers
                 _dataContext.Products.AddRange(productsList);
                 await _dataContext.SaveChangesAsync();
             }
-            // if (!string.IsNullOrWhiteSpace(filter.Name))
+            
             var products = await _dataContext.Products.ToListAsync();
             return Ok(products);
         }

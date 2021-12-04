@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-api-deployment-helm
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: product-api
+  replicas: {{ .Values.api.image.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: product-api
+    spec:
+      containers:
+      - name: product-api
+        image:  {{ .Values.api.image.dockerHubId }}/{{ .Values.api.image.name }}:{{ .Values.api.image.tag }}
+        resources:
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.memory }}
+        ports:
+        - containerPort: {{ .Values.api.port1 }}
+        - containerPort: {{ .Values.api.port2 }}
+        - containerPort: {{ .Values.api.port3 }}
+        env:
+          - name: ConnectionStrings__Default
+            valueFrom:
+              secretKeyRef:
+                name:  mssql-secret
+                key: db-connection-string
+              
+              # configMapKeyRef: 
+              #   name: mssql-config-map
+              #   key: db-connection 
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  product-api-service-helm
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app:  product-api
+  type: LoadBalancer
+  ports:
+  - name:  default-1
+    port:  {{ .Values.api.port1 }}
+    targetPort:  {{ .Values.api.port1 }}
+    protocol: TCP
+  - name:  default-2
+    port:  {{ .Values.api.port2 }}
+    targetPort:  {{ .Values.api.port2 }}
+    protocol: TCP
+  - name:  default-3
+    port:  {{ .Values.api.port3 }}
+    targetPort:  {{ .Values.api.port3 }}
+    protocol: TCP
